@@ -15,7 +15,7 @@
         $host  = $_SERVER['HTTP_HOST'];
         
         if (password_verify($pass, $db_hash)) {
-            // Set cookie for login message
+	    // Set cookie for login message
             header('Location: index.php');
         }
         else {
@@ -50,11 +50,6 @@
 
 <html>
 <body>
-    <?php
-        if (isset($error)) {
-            echo $error;
-        }
-    ?>
     <form method="post" action="login.php">
         <input type="text" placeholder="Username" name="username" required></input>
         <input type="password" placeholder="Password" name="password" required></input>
