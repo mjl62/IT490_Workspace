@@ -1,7 +1,11 @@
 <?php 
-setcookie("Testcookie", "This is a test", 86400, '...localhost', NULL);
+
+    $error = "";
     // functions
-    function checkLogin() {
+
+
+    function attemptLogin() {
+
         $user = $_POST["username"];
         $pass = $_POST["password"];
 
@@ -11,37 +15,45 @@ setcookie("Testcookie", "This is a test", 86400, '...localhost', NULL);
         $host  = $_SERVER['HTTP_HOST'];
         
         if (password_verify($pass, $db_hash)) {
-            // Generate key, store in cookies and db, this will be session key
+            // Set cookie for login message
             header('Location: index.php');
-
         }
         else {
-            // Store error in cookie to be deleted when page is reached, 
-            // give it a life of 5 minutes or something
-            setcookie("log_err_cookie", "Login Unsuccessful", 300, '/');
-            // header('Location: login.php');
+            // Set cookie for incorrect login
+            header('Location: login.php');
         }
-        
     }
 
-    
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        checkLogin();
-        
-    
+
+    function checkLogin() {
+        // TODO add a real check here for login
+        $loggedin = true;
+        if ($loggedin) {
+            return true;
+        }
+        return false;
     }
+
+    if (checkLogin()) {
+        // set cookie saying "You're already logged in."
+        header('Location: /IT490/');
+    }
+    else {
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            attemptLogin();
+        }
+    }
+    
     
 ?>
 
 
 <html>
 <body>
-    <?php 
-    echo $_COOKIE["Testcookie"];
-    if (isset($_COOKIE["Testcookie"])) {
-        echo $_COOKIE["Testcookie"];
-        //setcookie("log_err_cookie", "", time() - 3600);
-    }
+    <?php
+        if (isset($error)) {
+            echo $error;
+        }
     ?>
     <form method="post" action="login.php">
         <input type="text" placeholder="Username" name="username" required></input>
